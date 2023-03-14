@@ -3,7 +3,7 @@ extends CharacterBody2D
 const ACCELERATION = 500
 const MAX_SPEED = 130 #80
 const ROLL_SPEED = 180
-const FRICTION = 300
+const FRICTION = 460
 
 enum {
 	MOVE,
@@ -19,9 +19,15 @@ var roll_vector = Vector2.DOWN
 @onready var animationState = animationTree.get("parameters/playback")
 
 
+
+# VIRTUAL FUNCTIONS #
+#####################
 func _ready():
 	animationTree.active = true
+	xplor(animationTree)
 	
+	
+		
 func _process(delta: float) -> void:
 	if Input.is_action_just_pressed("_debugReset"):
 		get_tree().reload_current_scene()
@@ -35,6 +41,10 @@ func _physics_process( delta ):
 		ATTACK:
 			attack_state( delta )
 
+
+
+# MEMBER FUNCTIONS #
+####################
 func move_state( delta ):
 	var input_vector = Vector2.ZERO
 	input_vector.x = Input.get_action_strength("ui_right") - Input.get_action_strength("ui_left")
@@ -53,7 +63,6 @@ func move_state( delta ):
 	else:
 		animationState.travel("idle")
 		velocity = velocity.move_toward( Vector2.ZERO, FRICTION * delta )
-	
 	move()
 	
 	if Input.is_action_just_pressed("roll"):
@@ -75,9 +84,21 @@ func attack_state( delta ):
 	animationState.travel("attack")
 	
 func roll_animation_finished():
-	velocity = velocity/3
+	velocity = velocity * 0.5
 	state = MOVE
 #
 func attack_animation_finished():
-	print("hi")
 	state = MOVE
+	
+	
+# UTILITY FUNCTIONS #
+#####################
+func xplor(obj, terse=true):
+	for property_dict in obj.get_property_list( ):
+		var keys = property_dict.keys( )
+		var front_key = keys.pop_front( )
+		print( property_dict[front_key] )
+		if !terse:
+			for key in keys:
+				print( "\t%-15s:\t%s" % [key, property_dict[key]] )
+			print("\n\n")
