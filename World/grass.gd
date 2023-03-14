@@ -9,7 +9,6 @@ func create_grass_effect():
 
 
 
-func _on_hurtbox_area_entered(area: Area2D) -> void:
-	print("GRASS DED")
+func _on_hurtbox_area_entered( _area ) -> void:
 	create_grass_effect()
 	queue_free()

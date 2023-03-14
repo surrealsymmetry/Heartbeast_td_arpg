@@ -21,7 +21,6 @@ var roll_vector = Vector2.DOWN
 
 func _ready():
 	animationTree.active = true
-	animationPlayer.get_animation("AttackUp").length = 0.2
 	
 func _process(delta: float) -> void:
 	if Input.is_action_just_pressed("_debugReset"):
@@ -50,7 +49,6 @@ func move_state( delta ):
 		animationTree.set("parameters/attack/blend_position", input_vector)
 		animationTree.set("parameters/roll/blend_position", input_vector)
 		animationState.travel("run")
-		
 		velocity = velocity.move_toward( input_vector * MAX_SPEED, ACCELERATION * delta )
 	else:
 		animationState.travel("idle")
@@ -81,4 +79,5 @@ func roll_animation_finished():
 	state = MOVE
 #
 func attack_animation_finished():
+	print("hi")
 	state = MOVE
