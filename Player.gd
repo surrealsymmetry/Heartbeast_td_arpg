@@ -1,9 +1,9 @@
 extends CharacterBody2D
 
-const ACCELERATION = 500
-const MAX_SPEED = 130 #80
-const ROLL_SPEED = 180
-const FRICTION = 460
+const ACCELERATION 	= 500
+const MAX_SPEED 	= 130
+const ROLL_SPEED 	= 180
+const FRICTION 		= 460
 
 enum {
 	MOVE,
@@ -13,20 +13,23 @@ enum {
 
 var state = MOVE
 var roll_vector = Vector2.DOWN
+@export_range(0, 10) var attack_speed_mod: float = 2
 
-@onready var animationPlayer = $AnimationPlayer
-@onready var animationTree = $AnimationTree
-@onready var animationState = animationTree.get("parameters/playback")
+@onready var animation_player 	= $AnimationPlayer
+@onready var animation_tree 	= $AnimationTree
+@onready var animation_state 	= animation_tree.get("parameters/playback")
 
 
 
 # VIRTUAL FUNCTIONS #
 #####################
 func _ready():
-	animationTree.active = true
-	xplor(animationTree)
-	
-	
+	animation_tree.active = true
+	animation_tree.set("parameters/attack/0/TimeScale/scale", attack_speed_mod)
+	animation_tree.set("parameters/attack/1/TimeScale/scale", attack_speed_mod)
+	animation_tree.set("parameters/attack/2/TimeScale/scale", attack_speed_mod)
+	animation_tree.set("parameters/attack/3/TimeScale/scale", attack_speed_mod)
+	xplor(animation_tree, "scAle")
 		
 func _process(delta: float) -> void:
 	if Input.is_action_just_pressed("_debugReset"):
@@ -54,14 +57,14 @@ func move_state( delta ):
 	
 	if input_vector != Vector2.ZERO:
 		roll_vector = input_vector
-		animationTree.set("parameters/idle/blend_position", input_vector)
-		animationTree.set("parameters/run/blend_position", input_vector)
-		animationTree.set("parameters/attack/blend_position", input_vector)
-		animationTree.set("parameters/roll/blend_position", input_vector)
-		animationState.travel("run")
+		animation_tree.set("parameters/idle/blend_position", 	input_vector)
+		animation_tree.set("parameters/run/blend_position", 	input_vector)
+		animation_tree.set("parameters/attack/blend_position", 	input_vector)
+		animation_tree.set("parameters/roll/blend_position", 	input_vector)
+		animation_state.travel("run")
 		velocity = velocity.move_toward( input_vector * MAX_SPEED, ACCELERATION * delta )
 	else:
-		animationState.travel("idle")
+		animation_state.travel("idle")
 		velocity = velocity.move_toward( Vector2.ZERO, FRICTION * delta )
 	move()
 	
@@ -76,12 +79,12 @@ func move():
 	
 func roll_state( delta ):
 	velocity = roll_vector * ROLL_SPEED
-	animationState.travel("roll")
+	animation_state.travel("roll")
 	move()
 	
 func attack_state( delta ):
 	velocity = Vector2.ZERO
-	animationState.travel("attack")
+	animation_state.travel("attack")
 	
 func roll_animation_finished():
 	velocity = velocity * 0.5
@@ -93,12 +96,14 @@ func attack_animation_finished():
 	
 # UTILITY FUNCTIONS #
 #####################
-func xplor(obj, terse=true):
+func xplor( obj, filter="", terse=true ):
 	for property_dict in obj.get_property_list( ):
 		var keys = property_dict.keys( )
-		var front_key = keys.pop_front( )
-		print( property_dict[front_key] )
-		if !terse:
+		var property_name = property_dict[keys.pop_front( )]
+		var rejected = filter.length() != 0 and !property_name.to_lower().contains(filter.to_lower())
+		
+		if not rejected: print( property_name )	
+		if not terse and not rejected:
 			for key in keys:
 				print( "\t%-15s:\t%s" % [key, property_dict[key]] )
-			print("\n\n")
+			print("\n")
