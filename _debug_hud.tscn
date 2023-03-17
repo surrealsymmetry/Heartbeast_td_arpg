@@ -1,0 +1,31 @@
+[gd_scene load_steps=3 format=3 uid="uid://b4wg2v68fulh0"]
+
+[ext_resource type="FontFile" uid="uid://b6t0rmwuv77xn" path="res://Fonts/XanhMono-Regular_0.ttf" id="1_mhyyc"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_egboj"]
+line_spacing = 2.003
+font = ExtResource("1_mhyyc")
+font_size = 1
+font_color = Color(1, 0.921569, 0.945098, 1)
+outline_size = 7
+outline_color = Color(0.105882, 0.00392157, 0.054902, 1)
+shadow_size = 2
+shadow_color = Color(0, 0, 0, 0.341176)
+shadow_offset = Vector2(2, 3)
+
+[node name="_DebugHUD" type="Node2D"]
+z_index = 1
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+
+[node name="Label 1" type="Label" parent="Control"]
+offset_left = 10.0
+offset_top = 10.0
+offset_right = 50.0
+offset_bottom = 79.0
+text = "A:
+B:
+C:"
+label_settings = SubResource("LabelSettings_egboj")

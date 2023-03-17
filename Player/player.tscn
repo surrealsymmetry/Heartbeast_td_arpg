@@ -1,8 +1,9 @@
-[gd_scene load_steps=61 format=3 uid="uid://bw3r8pqacg48d"]
+[gd_scene load_steps=62 format=3 uid="uid://bw3r8pqacg48d"]
 
 [ext_resource type="Script" path="res://Player.gd" id="1_6rakm"]
 [ext_resource type="Texture2D" uid="uid://dri72mdkvrrnr" path="res://Player/Player.png" id="2_sbnvq"]
 [ext_resource type="PackedScene" uid="uid://deb81kh4fngcv" path="res://Hurtboxes + Hitboxes/hitbox.tscn" id="3_cb45i"]
+[ext_resource type="Script" path="res://Player/sword_hitbox.gd" id="4_wcywi"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_4nju6"]
 radius = 4.0
@@ -534,7 +535,7 @@ animation = &"AttackDown"
 [sub_resource type="AnimationNodeTimeScale" id="AnimationNodeTimeScale_skax7"]
 
 [sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_dlaeq"]
-graph_offset = Vector2(-161.66, 62.1641)
+graph_offset = Vector2(-219.16, 41.3308)
 nodes/Animation/node = SubResource("AnimationNodeAnimation_bgiok")
 nodes/Animation/position = Vector2(-48, 144)
 nodes/TimeScale/node = SubResource("AnimationNodeTimeScale_skax7")
@@ -575,10 +576,11 @@ animation = &"AttackLeft"
 [sub_resource type="AnimationNodeTimeScale" id="AnimationNodeTimeScale_tcxgl"]
 
 [sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_wnoaj"]
+graph_offset = Vector2(-179.367, 48.2011)
 nodes/Animation/node = SubResource("AnimationNodeAnimation_ygw5v")
 nodes/Animation/position = Vector2(16, 144)
 nodes/TimeScale/node = SubResource("AnimationNodeTimeScale_tcxgl")
-nodes/TimeScale/position = Vector2(176, 144)
+nodes/TimeScale/position = Vector2(166.667, 133.333)
 nodes/output/position = Vector2(336, 192)
 node_connections = [&"output", 0, &"TimeScale", &"TimeScale", 0, &"Animation"]
 
@@ -712,6 +714,7 @@ radius = 12.0
 [node name="Player" type="CharacterBody2D"]
 collision_layer = 2
 script = ExtResource("1_6rakm")
+attack_speed_mod = 2.5
 
 [node name="Sprite" type="Sprite2D" parent="."]
 position = Vector2(0, -8)
@@ -733,7 +736,7 @@ libraries = {
 tree_root = SubResource("AnimationNodeStateMachine_dopjk")
 anim_player = NodePath("../AnimationPlayer")
 parameters/playback = SubResource("AnimationNodeStateMachinePlayback_h6ikg")
-parameters/attack/blend_position = Vector2(-0.852342, 0.966968)
+parameters/attack/blend_position = Vector2(-1, 0.0112344)
 parameters/attack/0/TimeScale/scale = 1.0
 parameters/attack/1/TimeScale/scale = 1.0
 parameters/attack/2/TimeScale/scale = 1.0
@@ -749,6 +752,7 @@ rotation = 1.5708
 [node name="SwordHitbox" parent="HitboxPivot" instance=ExtResource("3_cb45i")]
 position = Vector2(15, 0)
 collision_layer = 8
+script = ExtResource("4_wcywi")
 
 [node name="CollisionShape2D" parent="HitboxPivot/SwordHitbox" index="0"]
 shape = SubResource("CapsuleShape2D_lipey")

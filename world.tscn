@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://c5jnj3vvoc8un"]
+[gd_scene load_steps=15 format=3 uid="uid://c5jnj3vvoc8un"]
 
 [ext_resource type="Texture2D" uid="uid://c74qr8wwyksf7" path="res://World/DirtTileset.png" id="2_6n0ek"]
 [ext_resource type="PackedScene" uid="uid://bw3r8pqacg48d" path="res://Player/player.tscn" id="2_rjuvp"]
@@ -7,6 +7,8 @@
 [ext_resource type="Texture2D" uid="uid://33bl2v1f5oew" path="res://World/CliffTileset.png" id="3_lianq"]
 [ext_resource type="PackedScene" uid="uid://w2dnopfx21se" path="res://World/grass.tscn" id="6_o1p76"]
 [ext_resource type="PackedScene" uid="uid://cdt732lipwygo" path="res://Enemies/bat.tscn" id="7_a4uje"]
+[ext_resource type="Script" path="res://_DebugHUD.gd" id="8_hposn"]
+[ext_resource type="FontFile" uid="uid://b6t0rmwuv77xn" path="res://Fonts/XanhMono-Regular_0.ttf" id="10_6hgfv"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_m8kwu"]
 resource_name = "dirt"
@@ -832,6 +834,13 @@ terrain_set_0/terrain_0/name = "Terrain 0"
 terrain_set_0/terrain_0/color = Color(0.878431, 0.345098, 0.894118, 1)
 sources/0 = SubResource("TileSetAtlasSource_r1nuu")
 
+[sub_resource type="LabelSettings" id="LabelSettings_w7qd8"]
+line_spacing = 0.2
+font = ExtResource("10_6hgfv")
+font_size = 6
+outline_size = 2
+outline_color = Color(0, 0, 0, 0.858824)
+
 [node name="World" type="Node2D"]
 y_sort_enabled = true
 
@@ -933,3 +942,19 @@ position = Vector2(48, 128)
 
 [node name="Bat2" parent="." instance=ExtResource("7_a4uje")]
 position = Vector2(224, 80)
+
+[node name="_DebugHUD" type="Node2D" parent="."]
+z_index = 1
+script = ExtResource("8_hposn")
+
+[node name="Control" type="Control" parent="_DebugHUD"]
+layout_mode = 3
+anchors_preset = 0
+
+[node name="Label 1" type="Label" parent="_DebugHUD/Control"]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 1.0
+offset_right = 41.0
+offset_bottom = 70.0
+label_settings = SubResource("LabelSettings_w7qd8")

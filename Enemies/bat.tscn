@@ -1,7 +1,10 @@
-[gd_scene load_steps=10 format=3 uid="uid://cdt732lipwygo"]
+[gd_scene load_steps=14 format=3 uid="uid://cdt732lipwygo"]
 
+[ext_resource type="Script" path="res://Enemies/bat.gd" id="1_hjkbg"]
 [ext_resource type="Texture2D" uid="uid://c0nqnwufhjdb2" path="res://Enemies/Bat.png" id="1_u8yju"]
 [ext_resource type="Texture2D" uid="uid://651ydgjhtnj7" path="res://Shadows/SmallShadow.png" id="2_ihfsp"]
+[ext_resource type="PackedScene" uid="uid://b2fma7mdy4if2" path="res://Hurtboxes + Hitboxes/hurtbox.tscn" id="4_scf0d"]
+[ext_resource type="PackedScene" uid="uid://ciuopoakn4nn4" path="res://stats.tscn" id="5_wvwpq"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_majfc"]
 radius = 5.0
@@ -49,9 +52,14 @@ animations = [{
 "speed": 14.0
 }]
 
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_fwd7j"]
+radius = 9.0
+height = 24.0
+
 [node name="Bat" type="CharacterBody2D"]
 collision_layer = 16
 collision_mask = 0
+script = ExtResource("1_hjkbg")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_majfc")
@@ -66,3 +74,16 @@ offset = Vector2(0, -12)
 
 [node name="ShadowSprite" type="Sprite2D" parent="."]
 texture = ExtResource("2_ihfsp")
+
+[node name="Hurtbox" parent="." instance=ExtResource("4_scf0d")]
+collision_mask = 8
+
+[node name="CollisionShape2D" parent="Hurtbox" index="0"]
+position = Vector2(0, -12)
+shape = SubResource("CapsuleShape2D_fwd7j")
+
+[node name="Stats" parent="." instance=ExtResource("5_wvwpq")]
+
+[connection signal="area_entered" from="Hurtbox" to="." method="_on_hurtbox_area_entered"]
+
+[editable path="Hurtbox"]
