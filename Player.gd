@@ -5,14 +5,16 @@ extends CharacterBody2D
 @export var ROLL_SPEED 		= 180
 @export var FRICTION 		= 460
 
+signal debug_velocity
+
 enum {
 	MOVE,
 	ROLL,
 	ATTACK
 }
-  
-var state = MOVE
+
 var roll_vector = Vector2.DOWN
+var state = MOVE
 @export_range(0, 10) var attack_speed_mod: float = 2
 
 @onready var animation_player 	= $AnimationPlayer
@@ -29,12 +31,19 @@ func _ready():
 	animation_tree.set("parameters/attack/1/TimeScale/scale", attack_speed_mod)
 	animation_tree.set("parameters/attack/2/TimeScale/scale", attack_speed_mod)
 	animation_tree.set("parameters/attack/3/TimeScale/scale", attack_speed_mod)
-#	xplor(animation_tree, "scAle")
+#	Util.xplor(animation_tree, "scAle")
 	sword_hitbox.knockback_vector = roll_vector
+	
+	
 		
 func _process(delta: float) -> void:
 	if Input.is_action_just_pressed("_debugReset"):
 		get_tree().reload_current_scene()
+		
+	debug_velocity.emit(velocity)
+
+	RenderingServer.global_shader_parameter_set("fx", true)
+	
 
 func _physics_process( delta ):
 	match state:
@@ -44,8 +53,6 @@ func _physics_process( delta ):
 			roll_state( delta )
 		ATTACK:
 			attack_state( delta )
-
-
 
 # MEMBER FUNCTIONS #
 ####################
@@ -102,14 +109,4 @@ func attack_animation_finished():
 	
 # UTILITY FUNCTIONS #
 #####################
-func xplor( obj, filter="", terse=true ):
-	for property_dict in obj.get_property_list( ):
-		var keys = property_dict.keys( )
-		var property_name = property_dict[keys.pop_front( )]
-		var rejected = filter.length() != 0 and !property_name.to_lower().contains(filter.to_lower())
-		
-		if not rejected: print( property_name )	
-		if not terse and not rejected:
-			for key in keys:
-				print( "\t%-15s:\t%s" % [key, property_dict[key]] )
-#			print("\n")
+

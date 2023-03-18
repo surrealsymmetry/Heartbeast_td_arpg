@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://c5jnj3vvoc8un"]
+[gd_scene load_steps=16 format=3 uid="uid://c5jnj3vvoc8un"]
 
 [ext_resource type="Texture2D" uid="uid://c74qr8wwyksf7" path="res://World/DirtTileset.png" id="2_6n0ek"]
 [ext_resource type="PackedScene" uid="uid://bw3r8pqacg48d" path="res://Player/player.tscn" id="2_rjuvp"]
@@ -834,6 +834,8 @@ terrain_set_0/terrain_0/name = "Terrain 0"
 terrain_set_0/terrain_0/color = Color(0.878431, 0.345098, 0.894118, 1)
 sources/0 = SubResource("TileSetAtlasSource_r1nuu")
 
+[sub_resource type="AnimationNodeStateMachinePlayback" id="AnimationNodeStateMachinePlayback_as7ja"]
+
 [sub_resource type="LabelSettings" id="LabelSettings_w7qd8"]
 line_spacing = 0.2
 font = ExtResource("10_6hgfv")
@@ -863,6 +865,9 @@ layer_0/tile_data = PackedInt32Array(327687, 393216, 2, 262151, 0, 0, 262152, 65
 
 [node name="Player" parent="." instance=ExtResource("2_rjuvp")]
 position = Vector2(128, 72)
+
+[node name="AnimationTree" parent="Player" index="3"]
+parameters/playback = SubResource("AnimationNodeStateMachinePlayback_as7ja")
 
 [node name="Bushes" type="Node2D" parent="."]
 y_sort_enabled = true
@@ -958,3 +963,8 @@ offset_top = 1.0
 offset_right = 41.0
 offset_bottom = 70.0
 label_settings = SubResource("LabelSettings_w7qd8")
+
+[connection signal="debug_velocity" from="Player" to="_DebugHUD" method="_on_player_debug_velocity"]
+
+[editable path="Player"]
+[editable path="Player/HitboxPivot/SwordHitbox"]

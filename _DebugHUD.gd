@@ -1,52 +1,28 @@
 extends Node2D
-var startup_garbage = 5
+
+var startup_garbage = 0
 var data = {'a': 0}
-var rng = RandomNumberGenerator.new()
+
+var update = {}
 
 @onready var label = $"Control/Label 1"
+@onready var player = get_tree().get_root().get_node("World/Player")
 
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	for i in range(startup_garbage):
-		data.merge({char(i + 65).to_lower(): random_char_string(8)}, true)	
-	update_label()	
+#RenderingServer.global_shader_parameter_set("fx", true)
+# VIRTUAL FUNCTIONS#
+####################
+func _on_player_debug_velocity(velocity) -> void:
+	data.merge( {"vel X: ": "%4.0f" % velocity.x, "vel Y: ": "%4.0f" % velocity.y}, true)
+	data.merge( {"TEST: ": Util.random_char_string(8)}, true)
+	data.merge( {"FPS: ": Engine.get_frames_per_second()}, true)
+	data.merge( {"FX:": RenderingServer.global_shader_parameter_get("fx")}, true)
+	update_label()
 
-#func _process(delta: float) -> void:
-#	pass
 
+# MEMBER FUNCTIONS #
+####################
 func update_label():
+	label.text = ""
 	for key in data.keys():
 		label.text += "\n%s:\t%s" % [key, data[key]]
-		
-func random_digit(length=1):
-	var result :int
-	for i in range(length):
-		result += rng.randi_range(0,9) * pow(10, i)
-#		print(str(i) + ", " + str(result))
-	return result
 
-func random_letter_string(length=1):
-	var result :String
-	for i in range(length):
-		var _char :String = char(randi_range(0, 25) + 65)
-		if coinflip():
-			_char = _char.to_lower()
-		result += _char
-	return result
-
-func random_char_string(length=1):
-	var result :String
-	for i in range(length):
-		if coinflip():
-			result += str(random_digit())
-		else:
-			result += random_letter_string()
-	return result
-
-func coinflip():
-	var result = (randi_range(0,1) == 1)
-#	if result:
-#		print("HEADs")
-#	else:
-#		print("TAILs")
-	return result

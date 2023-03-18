@@ -15,6 +15,10 @@ run/main_scene="res://world.tscn"
 config/features=PackedStringArray("4.0", "Forward Plus")
 config/icon="res://icon.svg"
 
+[autoload]
+
+Util="*res://util.gd"
+
 [display]
 
 window/size/viewport_width=320
@@ -23,6 +27,7 @@ window/size/resizable=false
 window/size/always_on_top=true
 window/size/window_width_override=1280
 window/size/window_height_override=720
+window/vsync/vsync_mode=0
 window/stretch/mode="canvas_items"
 window/stretch/aspect="ignore"
 
@@ -87,3 +92,10 @@ _debugReset={
 
 environment/defaults/default_clear_color=Color(0.870588, 0.784314, 0.819608, 1)
 textures/canvas_textures/default_texture_filter=0
+
+[shader_globals]
+
+pos={
+"type": "uvec2",
+"value": Vector2i(0, 0)
+}
