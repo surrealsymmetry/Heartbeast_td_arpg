@@ -46,3 +46,11 @@ func random_char_string(length=1):
 func coinflip():
 	var result = (randi_range(0,1) == 1)
 	return result
+	
+func random_v2_normal() -> Vector2:
+	var x = randf_range(-1, 1)
+	var y = randf_range(-1, 1)
+	
+	var result = Vector2(x, y).normalized()
+	return result
+	

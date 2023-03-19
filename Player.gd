@@ -4,8 +4,9 @@ extends CharacterBody2D
 @export var MAX_SPEED 		= 130
 @export var ROLL_SPEED 		= 180
 @export var FRICTION 		= 460
+@export_range(0, 10) var attack_speed_mod: float = 2
 
-signal debug_velocity
+signal _debug
 
 enum {
 	MOVE,
@@ -13,9 +14,9 @@ enum {
 	ATTACK
 }
 
+
 var roll_vector = Vector2.DOWN
 var state = MOVE
-@export_range(0, 10) var attack_speed_mod: float = 2
 
 @onready var animation_player 	= $AnimationPlayer
 @onready var animation_tree 	= $AnimationTree
@@ -39,11 +40,10 @@ func _ready():
 func _process(delta: float) -> void:
 	if Input.is_action_just_pressed("_debugReset"):
 		get_tree().reload_current_scene()
-		
-	debug_velocity.emit(velocity)
-
-	RenderingServer.global_shader_parameter_set("fx", true)
 	
+	_update_debug_info()
+	
+#	{"VEL X: ": "%4.0f" % velocity.x, "VEL Y: ": "%4.0f" % velocity.y}  {"SPEED": velocity.length()}
 
 func _physics_process( delta ):
 	match state:
@@ -56,35 +56,38 @@ func _physics_process( delta ):
 
 # MEMBER FUNCTIONS #
 ####################
+
+#var _debug_input :Vector2 = Util.random_v2_normal()
 func move_state( delta ):
 	var input_vector = Vector2.ZERO
 	input_vector.x = Input.get_action_strength("ui_right") - Input.get_action_strength("ui_left")
 	input_vector.y = Input.get_action_strength("ui_down") - Input.get_action_strength("ui_up")
 	input_vector = input_vector.normalized()
-	
+#	print(_debug_input)
 	
 	if input_vector != Vector2.ZERO:
 		roll_vector = input_vector
 		sword_hitbox.knockback_vector = input_vector
-
+		
 		animation_tree.set("parameters/idle/blend_position", 	input_vector)
 		animation_tree.set("parameters/run/blend_position", 	input_vector)
 		animation_tree.set("parameters/attack/blend_position", 	input_vector)
 		animation_tree.set("parameters/roll/blend_position", 	input_vector)
+		
 		animation_state.travel("run")
-
 		velocity = velocity.move_toward( input_vector * MAX_SPEED, ACCELERATION * delta )
 	else:
 		animation_state.travel("idle")
 		velocity = velocity.move_toward( Vector2.ZERO, FRICTION * delta )
+	
 	move()
 	
 	if Input.is_action_just_pressed("roll"):			
 		state = ROLL
 		
 	if Input.is_action_just_pressed("attack"):
-		velocity = Vector2.ZERO
-		velocity.move_toward(get_global_mouse_position(), delta * 300)
+		velocity = roll_vector 
+#		velocity.move_toward(get_global_mouse_position(), delta * 300)
 		state = ATTACK
 
 func move():
@@ -106,7 +109,14 @@ func roll_animation_finished():
 func attack_animation_finished():
 	state = MOVE
 	
-	
-# UTILITY FUNCTIONS #
-#####################
+# UTILITY / DEBUG FUNCTIONS #
+#############################
 
+func _update_debug_info():
+	var _debug_info = {
+		"STATE": state,
+		"SPEED": velocity.length(),
+		"TEST": Util.random_char_string(5)	
+	}
+#	print(Engine.get_frames_per_second(), " : ",  Util.random_char_string(500))
+	_debug.emit(_debug_info)

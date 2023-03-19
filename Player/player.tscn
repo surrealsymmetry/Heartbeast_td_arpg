@@ -1,14 +1,9 @@
-[gd_scene load_steps=64 format=3 uid="uid://bw3r8pqacg48d"]
+[gd_scene load_steps=62 format=3 uid="uid://bw3r8pqacg48d"]
 
 [ext_resource type="Script" path="res://Player.gd" id="1_6rakm"]
-[ext_resource type="Shader" path="res://Player/player.gdshader" id="2_h6qbd"]
 [ext_resource type="Texture2D" uid="uid://dri72mdkvrrnr" path="res://Player/Player.png" id="2_sbnvq"]
 [ext_resource type="PackedScene" uid="uid://deb81kh4fngcv" path="res://Hurtboxes + Hitboxes/hitbox.tscn" id="3_cb45i"]
 [ext_resource type="Script" path="res://Player/sword_hitbox.gd" id="4_wcywi"]
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_m0418"]
-shader = ExtResource("2_h6qbd")
-shader_parameter/fx = false
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_4nju6"]
 radius = 4.0
@@ -722,7 +717,6 @@ script = ExtResource("1_6rakm")
 attack_speed_mod = 2.5
 
 [node name="Sprite" type="Sprite2D" parent="."]
-material = SubResource("ShaderMaterial_m0418")
 position = Vector2(0, -8)
 texture = ExtResource("2_sbnvq")
 hframes = 60

@@ -1,21 +1,19 @@
 extends Node2D
 
-var startup_garbage = 0
-var data = {'a': 0}
-
-var update = {}
+var data = {}
 
 @onready var label = $"Control/Label 1"
 @onready var player = get_tree().get_root().get_node("World/Player")
 
-#RenderingServer.global_shader_parameter_set("fx", true)
+
 # VIRTUAL FUNCTIONS#
 ####################
-func _on_player_debug_velocity(velocity) -> void:
-	data.merge( {"vel X: ": "%4.0f" % velocity.x, "vel Y: ": "%4.0f" % velocity.y}, true)
+func _process(delta: float) -> void:
 	data.merge( {"TEST: ": Util.random_char_string(8)}, true)
 	data.merge( {"FPS: ": Engine.get_frames_per_second()}, true)
-	data.merge( {"FX:": RenderingServer.global_shader_parameter_get("fx")}, true)
+
+func _on_player_debug( dict: Dictionary ) -> void:
+	data.merge( dict, true )
 	update_label()
 
 
@@ -25,4 +23,3 @@ func update_label():
 	label.text = ""
 	for key in data.keys():
 		label.text += "\n%s:\t%s" % [key, data[key]]
-

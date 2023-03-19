@@ -839,9 +839,10 @@ sources/0 = SubResource("TileSetAtlasSource_r1nuu")
 [sub_resource type="LabelSettings" id="LabelSettings_w7qd8"]
 line_spacing = 0.2
 font = ExtResource("10_6hgfv")
-font_size = 6
+font_size = 4
 outline_size = 2
 outline_color = Color(0, 0, 0, 0.858824)
+shadow_size = 5
 
 [node name="World" type="Node2D"]
 y_sort_enabled = true
@@ -962,9 +963,10 @@ offset_left = 1.0
 offset_top = 1.0
 offset_right = 41.0
 offset_bottom = 70.0
+text = "sadfsdf"
 label_settings = SubResource("LabelSettings_w7qd8")
 
-[connection signal="debug_velocity" from="Player" to="_DebugHUD" method="_on_player_debug_velocity"]
+[connection signal="_debug" from="Player" to="_DebugHUD" method="_on_player_debug"]
 
 [editable path="Player"]
 [editable path="Player/HitboxPivot/SwordHitbox"]
