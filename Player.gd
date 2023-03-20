@@ -5,6 +5,7 @@ extends CharacterBody2D
 @export var ROLL_SPEED 		= 180
 @export var FRICTION 		= 460
 @export_range(0, 10) var attack_speed_mod: float = 2
+@export_range(0, 10) var roll_speed_mod: float = 2
 
 signal _debug
 
@@ -32,7 +33,11 @@ func _ready():
 	animation_tree.set("parameters/attack/1/TimeScale/scale", attack_speed_mod)
 	animation_tree.set("parameters/attack/2/TimeScale/scale", attack_speed_mod)
 	animation_tree.set("parameters/attack/3/TimeScale/scale", attack_speed_mod)
-#	Util.xplor(animation_tree, "scAle")
+	animation_tree.set("parameters/roll/0/TimeScale/scale", roll_speed_mod)
+	animation_tree.set("parameters/roll/1/TimeScale/scale", roll_speed_mod)
+	animation_tree.set("parameters/roll/2/TimeScale/scale", roll_speed_mod)
+	animation_tree.set("parameters/roll/3/TimeScale/scale", roll_speed_mod)
+	Util.xplor(animation_tree, "scAle")
 	sword_hitbox.knockback_vector = roll_vector
 	
 	
@@ -99,6 +104,7 @@ func roll_state( delta ):
 	move()
 	
 func attack_state( delta ):
+	velocity = roll_vector * ROLL_SPEED/3
 	animation_state.travel("attack")
 	move()
 	
@@ -116,7 +122,7 @@ func _update_debug_info():
 	var _debug_info = {
 		"STATE": state,
 		"SPEED": velocity.length(),
-		"TEST": Util.random_char_string(5)	
+#		"TEST": Util.random_char_string(5)	
 	}
 #	print(Engine.get_frames_per_second(), " : ",  Util.random_char_string(500))
 	_debug.emit(_debug_info)

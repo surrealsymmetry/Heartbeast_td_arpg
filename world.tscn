@@ -956,14 +956,16 @@ script = ExtResource("8_hposn")
 [node name="Control" type="Control" parent="_DebugHUD"]
 layout_mode = 3
 anchors_preset = 0
+offset_right = 320.0
+offset_bottom = 180.0
 
 [node name="Label 1" type="Label" parent="_DebugHUD/Control"]
 layout_mode = 0
 offset_left = 1.0
-offset_top = 1.0
-offset_right = 41.0
-offset_bottom = 70.0
-text = "sadfsdf"
+offset_top = -5.0
+offset_right = 65.0
+offset_bottom = 64.0
+text = "this is overwritten by _DebugHUD"
 label_settings = SubResource("LabelSettings_w7qd8")
 
 [connection signal="_debug" from="Player" to="_DebugHUD" method="_on_player_debug"]

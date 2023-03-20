@@ -1,4 +1,4 @@
-[gd_scene load_steps=62 format=3 uid="uid://bw3r8pqacg48d"]
+[gd_scene load_steps=70 format=3 uid="uid://bw3r8pqacg48d"]
 
 [ext_resource type="Script" path="res://Player.gd" id="1_6rakm"]
 [ext_resource type="Texture2D" uid="uid://dri72mdkvrrnr" path="res://Player/Player.png" id="2_sbnvq"]
@@ -622,26 +622,68 @@ min_space = Vector2(-1, -1.1)
 max_space = Vector2(1, 1.1)
 blend_mode = 1
 
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_5ayro"]
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_fb0wh"]
 animation = &"RollDown"
 
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_frhx0"]
-animation = &"RollRight"
+[sub_resource type="AnimationNodeTimeScale" id="AnimationNodeTimeScale_np2h0"]
 
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_txdsu"]
-animation = &"RollUp"
+[sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_kcgj8"]
+graph_offset = Vector2(-216.25, 15)
+nodes/Animation/node = SubResource("AnimationNodeAnimation_fb0wh")
+nodes/Animation/position = Vector2(50, 125)
+nodes/TimeScale/node = SubResource("AnimationNodeTimeScale_np2h0")
+nodes/TimeScale/position = Vector2(225, 125)
+nodes/output/position = Vector2(400, 150)
+node_connections = [&"output", 0, &"TimeScale", &"TimeScale", 0, &"Animation"]
 
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_x6j3a"]
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_fmauk"]
 animation = &"RollLeft"
 
+[sub_resource type="AnimationNodeTimeScale" id="AnimationNodeTimeScale_2josm"]
+
+[sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_65pu0"]
+nodes/Animation/node = SubResource("AnimationNodeAnimation_fmauk")
+nodes/Animation/position = Vector2(132.75, 155.75)
+nodes/TimeScale/node = SubResource("AnimationNodeTimeScale_2josm")
+nodes/TimeScale/position = Vector2(321.5, 240.75)
+nodes/output/position = Vector2(500, 150)
+node_connections = [&"output", 0, &"TimeScale", &"TimeScale", 0, &"Animation"]
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_sjvbm"]
+animation = &"RollUp"
+
+[sub_resource type="AnimationNodeTimeScale" id="AnimationNodeTimeScale_30ogx"]
+
+[sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_45uaq"]
+graph_offset = Vector2(-355, -31.25)
+nodes/Animation/node = SubResource("AnimationNodeAnimation_sjvbm")
+nodes/Animation/position = Vector2(-25, 100)
+nodes/TimeScale/node = SubResource("AnimationNodeTimeScale_30ogx")
+nodes/TimeScale/position = Vector2(150, 150)
+nodes/output/position = Vector2(325, 100)
+node_connections = [&"output", 0, &"TimeScale", &"TimeScale", 0, &"Animation"]
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_103cx"]
+animation = &"RollLeft"
+
+[sub_resource type="AnimationNodeTimeScale" id="AnimationNodeTimeScale_a1xx2"]
+
+[sub_resource type="AnimationNodeBlendTree" id="AnimationNodeBlendTree_2cy1o"]
+nodes/Animation/node = SubResource("AnimationNodeAnimation_103cx")
+nodes/Animation/position = Vector2(582.75, 140.75)
+nodes/TimeScale/node = SubResource("AnimationNodeTimeScale_a1xx2")
+nodes/TimeScale/position = Vector2(750, 100)
+nodes/output/position = Vector2(950, 100)
+node_connections = [&"output", 0, &"TimeScale", &"TimeScale", 0, &"Animation"]
+
 [sub_resource type="AnimationNodeBlendSpace2D" id="AnimationNodeBlendSpace2D_4dpfd"]
-blend_point_0/node = SubResource("AnimationNodeAnimation_5ayro")
+blend_point_0/node = SubResource("AnimationNodeBlendTree_kcgj8")
 blend_point_0/pos = Vector2(0, 1.1)
-blend_point_1/node = SubResource("AnimationNodeAnimation_frhx0")
+blend_point_1/node = SubResource("AnimationNodeBlendTree_65pu0")
 blend_point_1/pos = Vector2(1, 0)
-blend_point_2/node = SubResource("AnimationNodeAnimation_txdsu")
+blend_point_2/node = SubResource("AnimationNodeBlendTree_45uaq")
 blend_point_2/pos = Vector2(0, -1.1)
-blend_point_3/node = SubResource("AnimationNodeAnimation_x6j3a")
+blend_point_3/node = SubResource("AnimationNodeBlendTree_2cy1o")
 blend_point_3/pos = Vector2(-1, 0)
 min_space = Vector2(-1, -1.1)
 max_space = Vector2(1, 1.1)
@@ -704,7 +746,7 @@ states/roll/position = Vector2(462, -28)
 states/run/node = SubResource("AnimationNodeBlendSpace2D_k8b2b")
 states/run/position = Vector2(662, 48)
 transitions = ["idle", "run", SubResource("AnimationNodeStateMachineTransition_bt0yb"), "run", "idle", SubResource("AnimationNodeStateMachineTransition_cppdt"), "Start", "idle", SubResource("AnimationNodeStateMachineTransition_am08m"), "idle", "attack", SubResource("AnimationNodeStateMachineTransition_3jy43"), "attack", "idle", SubResource("AnimationNodeStateMachineTransition_nrk3p"), "roll", "idle", SubResource("AnimationNodeStateMachineTransition_g7hj5"), "idle", "roll", SubResource("AnimationNodeStateMachineTransition_mc4or")]
-graph_offset = Vector2(150, 12)
+graph_offset = Vector2(25, -50)
 
 [sub_resource type="AnimationNodeStateMachinePlayback" id="AnimationNodeStateMachinePlayback_h6ikg"]
 
@@ -713,8 +755,14 @@ radius = 12.0
 
 [node name="Player" type="CharacterBody2D"]
 collision_layer = 2
+motion_mode = 1
 script = ExtResource("1_6rakm")
+ACCELERATION = 600
+MAX_SPEED = 110
+ROLL_SPEED = 200
+FRICTION = 400
 attack_speed_mod = 2.5
+roll_speed_mod = 1.6
 
 [node name="Sprite" type="Sprite2D" parent="."]
 position = Vector2(0, -8)
@@ -742,7 +790,11 @@ parameters/attack/1/TimeScale/scale = 1.0
 parameters/attack/2/TimeScale/scale = 1.0
 parameters/attack/3/TimeScale/scale = 1.0
 parameters/idle/blend_position = Vector2(-0.0940639, 0.57619)
-parameters/roll/blend_position = Vector2(0, 0)
+parameters/roll/blend_position = Vector2(0.000324249, 1.09592)
+parameters/roll/0/TimeScale/scale = 1.0
+parameters/roll/1/TimeScale/scale = 1.0
+parameters/roll/2/TimeScale/scale = 1.0
+parameters/roll/3/TimeScale/scale = 1.0
 parameters/run/blend_position = Vector2(0, 0)
 
 [node name="HitboxPivot" type="Marker2D" parent="."]
