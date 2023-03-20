@@ -18,6 +18,9 @@ func xplor( obj, filter="", terse=true ):
 
 # RANDOM DATA #
 ###############
+func random_float_normal():
+	return rng.randf()
+	
 func random_digit(length=1):
 	var result :int
 	for i in range(length):
