@@ -6,14 +6,13 @@ enum {
 	CYBER, 
 }
 
-const WIDTH = 50
+const WIDTH = 70
 
 var style = RANDOM
-var parent :Node 
+#var parent :Node 
 var gradient :Gradient
 
-var _demo_mode :bool = true
-var _demo_input :float = randf()
+var input :float = 0.0
 
 var pos :Vector2
 var size :Vector2
@@ -25,6 +24,8 @@ var bg_color :Color = Color(0, 0, 0, 0.65)
 var font :Font = load("res://Fonts/XanhMono-Italic.otf")
 var font_size :int = 4
 
+var _demo_mode :bool = false
+var _demo_input :float = randf()
 var _decreasing :bool = false
 var _cycles_per_second = randf_range(0.2, 2)
 
@@ -33,7 +34,7 @@ func _ready() -> void:
 	gradient = new_gradient_from_preset()	
 #	for p in gradient.get_point_count():
 #		print("%s: %s" % [p, gradient.get_color(p)])
-	
+
 func _process(delta: float) -> void:	
 	if _demo_mode:
 		if not _decreasing:
@@ -43,13 +44,19 @@ func _process(delta: float) -> void:
 		
 		if _demo_input <= 0.0:
 			_decreasing = false
+			_demo_input = 0.0
 		if _demo_input >= 1.0:
 			_decreasing = true
+			_demo_input = 1.0
+		
+		input = _demo_input
+	
 	queue_redraw()
 
 func _draw():
 	draw_rect( Rect2(pos,size + pad), bg_color )
-	draw_rect( Rect2(pos + pad, Vector2(size.x * _demo_input,  size.y) - pad),  gradient.sample(_demo_input))
+	
+	draw_rect( Rect2(pos + pad, Vector2(size.x * input,  size.y) - pad),  gradient.sample(input))
 	
 	draw_string_outline( font, pos, label, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size, 2, Color.BLACK )	
 	draw_string( font, pos, label, HORIZONTAL_ALIGNMENT_LEFT, -1, font_size )
@@ -58,6 +65,8 @@ func get_size() -> Vector2:
 	var h = font.get_height(font_size)
 	return Vector2(WIDTH, h - pad.y)
 
+func set_demo(b :bool):
+	_demo_mode = b
 
 func new_gradient_from_preset() -> Gradient:
 	gradient = Gradient.new()
@@ -85,7 +94,3 @@ func new_gradient_from_preset() -> Gradient:
 			gradient.add_point(0.25, 	Color.BLUE)
 			gradient.add_point(0.48, 	Color.DARK_ORCHID)
 	return gradient
-
-
-
-

@@ -12,8 +12,17 @@ var text_offset : Vector2
 # VIRTUAL FUNCTIONS#
 ####################
 func _ready() -> void:
-	meters.merge( {"hp" : meter_scene.instantiate(), "speed" : meter_scene.instantiate()}, true)	
+	meters.merge( {
+			"random" : meter_scene.instantiate(),
+			"hp" : meter_scene.instantiate(), 
+			"speed" : meter_scene.instantiate(), 
+		}, true
+	)
+	var demo_meter = meters["random"]
+	demo_meter.set_demo(true)
+	
 	meters["hp"].style = meters["hp"].HIT_POINTS
+	meters["speed"].style = meters["speed"].CYBER
 	
 	for v in meters.values():
 		add_child(v)
@@ -23,10 +32,12 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	data.merge( {
-			"FPS: " : Engine.get_frames_per_second(),
-			"TEST: ": Util.random_char_string(8),
+			"FPS" : Engine.get_frames_per_second(),
+			"TEST": Util.random_char_string(8),
 		}, true
 	)
+	
+	meters["speed"].input = data["SPEED"]/200
 	
 	_test_label_adding( delta )
 	queue_redraw()

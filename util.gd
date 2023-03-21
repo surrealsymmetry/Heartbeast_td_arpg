@@ -59,20 +59,20 @@ func random_v2_normal() -> Vector2:
 	
 func random_color_set( steps=0 ) -> Array:
 	var base_color = randf()
-	var delta = randf_range( 0.35, 0.65 ) #cheap hack to give it direction
+	var delta = randf_range( 0.40, 1.0 ) #cheap hack to give it direction
 	if coinflip(): delta *= -1
 	var target_color = base_color + delta
 		
 	var hue_series = [Color.from_hsv(base_color, 1, 1, 1), Color.from_hsv(target_color, 1, 1, 1)]
 
-	print( "\n\nnew hue series....\n%.3f to %.3f, \t %s steps " % [base_color, target_color, steps])
+#	print( "\n\nnew hue series....\n%.3f to %.3f, \t %s steps " % [base_color, target_color, steps])
 	
 	if steps > 0:
 		var travel_per_step :float = 1.0 / (steps + 1.0)
 		for step in steps:
 			var travel :float  = travel_per_step * (step + 1.0)	
 			var f = lerp(base_color, target_color, travel)
-			print("Step %s of %s\t\t+%.3f\n\tTravel:\t%.3f\n\tValue:\t%.3f" % [step, steps, travel_per_step, travel, f])
+#			print("Step %s of %s\t\t+%.3f\n\tTravel:\t%.3f\n\tValue:\t%.3f" % [step, steps, travel_per_step, travel, f])
 			
 			hue_series.append(Color.from_hsv(f, 1, 1, 1))
 	
