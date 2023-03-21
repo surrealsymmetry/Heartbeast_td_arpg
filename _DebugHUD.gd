@@ -1,98 +1,72 @@
 extends Node2D
 
 var data = {}
-var speed_meter = Node
+var text_offset : Vector2
 
 @onready var label 	: Node = $"Control/Label 1"
 @onready var player : CharacterBody2D = get_tree().get_root().get_node("World/Player")
-@onready var meter_scene :PackedScene = load("res://UI/meter.tscn")
+@onready var meter_scene : PackedScene = load("res://UI/meter.tscn")
 
+@onready var meters : Dictionary
 
 # VIRTUAL FUNCTIONS#
 ####################
 func _ready() -> void:
-	speed_meter = meter_scene.instantiate()
-	add_child(speed_meter)
+	meters.merge( {"hp" : meter_scene.instantiate(), "speed" : meter_scene.instantiate()}, true)	
+	meters["hp"].style = meters["hp"].HIT_POINTS
 	
-#	var line_count = label.get_line_count()
-#	var line_height = label.get_line_height()
-#	data.merge({"LINES: ": line_count}, true)
-#
-#	var x = label.position.x
-#	var y = line_height * line_count
+	for v in meters.values():
+		add_child(v)
+		v.label = meters.find_key(v)
+	
+	_adjust_meters()
 
 func _process(delta: float) -> void:
 	data.merge( {
-			"FPS: ": Engine.get_frames_per_second(),
-#			"TEST: ": Util.random_char_string(8),
+			"FPS: " : Engine.get_frames_per_second(),
+			"TEST: ": Util.random_char_string(8),
 		}, true
 	)
 	
-#	test_label_adding( delta )
+	_test_label_adding( delta )
 	queue_redraw()
-	
-#func _draw() -> void:
-#	draw_meter("test meter", Util.random_float_normal())
 
+# SIGNALLED
 func _on_player_debug( dict: Dictionary ) -> void:
 	data.merge( dict, true )
-	update_label()
+	update_label( )
 	
 # MEMBER FUNCTIONS #
 ####################
-func update_label():
+func update_label( ):
 	label.text = ""
 	var sorted_keys = data.keys()
 	sorted_keys.sort()
+	
 	for key in sorted_keys:
 		label.text += "\n%s:\t%s" % [key, data[key]]
-
-func get_placement():
-	var y = label.get_line_count() * label.get_line_height()	
-	var x = 2
-	return Vector2(x, y)
-#func draw_meter(text, f):
-#	var bg_color :Color = Color(0, 0, 0, 0.5)
-#	var fg_color :Color = Color.RED.lerp(Color.GREEN, f)
-#	var pad = 1
-#	var w = 75
-#
-#	var line_count = label.get_line_count()
-#	var line_height = label.get_line_height()
-#	data.merge({"LINES: ": line_count}, true)
-#
-#	var x = label.position.x
-#	var y = line_height * line_count
-#
-#	var meter_text_pos = Vector2(x, y)
-#
-#	var range :Vector2 = Vector2(0, 1)
-#
-#	draw_rect(
-#		Rect2(
-#			x, 
-#			y, 
-#			w, 
-#			line_height
-#		), 
-#		bg_color 
-#	)
-#	draw_rect( 
-#		Rect2(
-#			x + pad, 
-#			y + pad, 
-#			w * f - pad * 2, 
-#			line_height - pad * 2 
-#		), 
-#		fg_color
-#	)
-#
-#	draw_string_outline(font, meter_text_pos, text, HORIZONTAL_ALIGNMENT_LEFT, -1, 4, 2, Color.BLACK)
-#	draw_string(font, meter_text_pos, text, HORIZONTAL_ALIGNMENT_LEFT, -1, 4 )
 	
+	calculate_text_bottomleft()
+	_adjust_meters()
+
+func calculate_text_bottomleft():
+	var y = label.get_line_count() * label.get_line_height()	
+	var x = position.x
+	text_offset = Vector2(x, y)
+	return text_offset
+
 var _time_since_new_label :float = 0
-func test_label_adding(delta):
+func _test_label_adding(delta):
 	_time_since_new_label += delta
 	if _time_since_new_label > 3:
-		data.merge({Util.random_digit(): "placeholder garbage " + Util.random_char_string(4)}, true)
+		data.merge({"garbage_key--%s" % Util.random_digit(): Util.random_char_string(4)}, true)
+		data.erase("garbage_key--%s" % Util.random_digit())
 		_time_since_new_label = 0
+
+func _adjust_meters():
+	var p = text_offset
+	for m in meters:
+		meters[m].pos.y = p.y
+		p.y += meters[m].size.y + 5
+		meters[m].pos.x = position.x
+		

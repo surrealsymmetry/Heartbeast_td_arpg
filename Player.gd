@@ -37,7 +37,7 @@ func _ready():
 	animation_tree.set("parameters/roll/1/TimeScale/scale", roll_speed_mod)
 	animation_tree.set("parameters/roll/2/TimeScale/scale", roll_speed_mod)
 	animation_tree.set("parameters/roll/3/TimeScale/scale", roll_speed_mod)
-	Util.xplor(animation_tree, "scAle")
+#	Util.xplor(animation_tree, "scAle")
 	sword_hitbox.knockback_vector = roll_vector
 	
 	
