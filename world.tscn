@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://c5jnj3vvoc8un"]
+[gd_scene load_steps=16 format=3 uid="uid://c5jnj3vvoc8un"]
 
 [ext_resource type="Texture2D" uid="uid://c74qr8wwyksf7" path="res://World/DirtTileset.png" id="2_6n0ek"]
 [ext_resource type="PackedScene" uid="uid://bw3r8pqacg48d" path="res://Player/player.tscn" id="2_rjuvp"]
@@ -8,7 +8,6 @@
 [ext_resource type="PackedScene" uid="uid://w2dnopfx21se" path="res://World/grass.tscn" id="6_o1p76"]
 [ext_resource type="PackedScene" uid="uid://cdt732lipwygo" path="res://Enemies/bat.tscn" id="7_a4uje"]
 [ext_resource type="Script" path="res://_DebugHUD.gd" id="8_hposn"]
-[ext_resource type="FontFile" uid="uid://dcowbm1y5s83t" path="res://Fonts/XanhMono-Italic.otf" id="9_1etgu"]
 [ext_resource type="FontFile" uid="uid://b6t0rmwuv77xn" path="res://Fonts/XanhMono-Regular_0.ttf" id="10_6hgfv"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_m8kwu"]
@@ -953,7 +952,6 @@ position = Vector2(224, 80)
 [node name="_DebugHUD" type="Node2D" parent="."]
 z_index = 1
 script = ExtResource("8_hposn")
-font = ExtResource("9_1etgu")
 
 [node name="Control" type="Control" parent="_DebugHUD"]
 layout_mode = 3
