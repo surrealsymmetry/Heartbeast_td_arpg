@@ -90,7 +90,7 @@ _debugReset={
 
 [rendering]
 
-environment/defaults/default_clear_color=Color(0.870588, 0.784314, 0.819608, 1)
+environment/defaults/default_clear_color=Color(0.278431, 0.235294, 0.227451, 1)
 textures/canvas_textures/default_texture_filter=0
 
 [shader_globals]
