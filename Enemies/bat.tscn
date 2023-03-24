@@ -1,10 +1,12 @@
-[gd_scene load_steps=14 format=3 uid="uid://cdt732lipwygo"]
+[gd_scene load_steps=18 format=3 uid="uid://cdt732lipwygo"]
 
 [ext_resource type="Script" path="res://Enemies/bat.gd" id="1_hjkbg"]
 [ext_resource type="Texture2D" uid="uid://c0nqnwufhjdb2" path="res://Enemies/Bat.png" id="1_u8yju"]
 [ext_resource type="Texture2D" uid="uid://651ydgjhtnj7" path="res://Shadows/SmallShadow.png" id="2_ihfsp"]
 [ext_resource type="PackedScene" uid="uid://b2fma7mdy4if2" path="res://Hurtboxes + Hitboxes/hurtbox.tscn" id="4_scf0d"]
 [ext_resource type="PackedScene" uid="uid://ciuopoakn4nn4" path="res://stats.tscn" id="5_wvwpq"]
+[ext_resource type="PackedScene" uid="uid://ddwy1ufomrne0" path="res://Enemies/player_detection_zone.tscn" id="6_eh14w"]
+[ext_resource type="PackedScene" uid="uid://deb81kh4fngcv" path="res://Hurtboxes + Hitboxes/hitbox.tscn" id="7_ne1ab"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_majfc"]
 radius = 5.0
@@ -56,10 +58,17 @@ animations = [{
 radius = 9.0
 height = 24.0
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_csi8q"]
+radius = 62.0322
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_f24x5"]
+radius = 6.08276
+
 [node name="Bat" type="CharacterBody2D"]
 collision_layer = 16
 collision_mask = 0
 script = ExtResource("1_hjkbg")
+FRICTION = 9005
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_majfc")
@@ -85,7 +94,23 @@ shape = SubResource("CapsuleShape2D_fwd7j")
 [node name="Stats" parent="." instance=ExtResource("5_wvwpq")]
 max_health = 2
 
+[node name="PlayerDetectionZone" parent="." instance=ExtResource("6_eh14w")]
+
+[node name="CollisionShape2D" parent="PlayerDetectionZone" index="0"]
+shape = SubResource("CircleShape2D_csi8q")
+debug_color = Color(0.537255, 0, 0.176471, 0.0784314)
+
+[node name="Hitbox" parent="." instance=ExtResource("7_ne1ab")]
+collision_layer = 4
+
+[node name="CollisionShape2D" parent="Hitbox" index="0"]
+position = Vector2(0, -14)
+shape = SubResource("CircleShape2D_f24x5")
+debug_color = Color(0, 0.6, 0.701961, 0.419608)
+
 [connection signal="area_entered" from="Hurtbox" to="." method="_on_hurtbox_area_entered"]
 [connection signal="no_health" from="Stats" to="." method="_on_stats_no_health"]
 
 [editable path="Hurtbox"]
+[editable path="PlayerDetectionZone"]
+[editable path="Hitbox"]

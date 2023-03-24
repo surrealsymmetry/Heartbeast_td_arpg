@@ -1,15 +1,8 @@
 extends AnimatedSprite2D
 
 func _ready() -> void:
-	animation_finished.connect(_on_animation_finished)
-	
-	if is_connected("animation_finished", _on_animation_finished):
-		print('signal SET for animation_finished')
-	else:
-		print('signal FAILED to set')
-	
+	animation_looped.connect(_on_animation_looped)
 	play("Animate")
 
-func _on_animation_finished() -> void:
-	print("this never executes")
+func _on_animation_looped() -> void:
 	queue_free() 

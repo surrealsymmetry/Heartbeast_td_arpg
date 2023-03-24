@@ -1,9 +1,10 @@
-[gd_scene load_steps=70 format=3 uid="uid://bw3r8pqacg48d"]
+[gd_scene load_steps=72 format=3 uid="uid://bw3r8pqacg48d"]
 
 [ext_resource type="Script" path="res://Player.gd" id="1_6rakm"]
-[ext_resource type="Texture2D" uid="uid://dri72mdkvrrnr" path="res://Player/Player.png" id="2_sbnvq"]
+[ext_resource type="Texture2D" uid="uid://debcgsq7jld1q" path="res://Player/Player2.png" id="2_vj05n"]
 [ext_resource type="PackedScene" uid="uid://deb81kh4fngcv" path="res://Hurtboxes + Hitboxes/hitbox.tscn" id="3_cb45i"]
 [ext_resource type="Script" path="res://Player/sword_hitbox.gd" id="4_wcywi"]
+[ext_resource type="PackedScene" uid="uid://b2fma7mdy4if2" path="res://Hurtboxes + Hitboxes/hurtbox.tscn" id="5_njj3f"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_4nju6"]
 radius = 4.0
@@ -753,6 +754,10 @@ graph_offset = Vector2(25, -50)
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_lipey"]
 radius = 12.0
 
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_8sg4p"]
+radius = 6.0
+height = 20.0
+
 [node name="Player" type="CharacterBody2D"]
 collision_layer = 2
 motion_mode = 1
@@ -766,7 +771,7 @@ roll_speed_mod = 1.6
 
 [node name="Sprite" type="Sprite2D" parent="."]
 position = Vector2(0, -8)
-texture = ExtResource("2_sbnvq")
+texture = ExtResource("2_vj05n")
 hframes = 60
 frame = 1
 
@@ -789,7 +794,7 @@ parameters/attack/0/TimeScale/scale = 1.0
 parameters/attack/1/TimeScale/scale = 1.0
 parameters/attack/2/TimeScale/scale = 1.0
 parameters/attack/3/TimeScale/scale = 1.0
-parameters/idle/blend_position = Vector2(0, 1)
+parameters/idle/blend_position = Vector2(-0.426468, -0.51775)
 parameters/roll/blend_position = Vector2(0, 1)
 parameters/roll/0/TimeScale/scale = 1.0
 parameters/roll/1/TimeScale/scale = 1.0
@@ -810,4 +815,14 @@ script = ExtResource("4_wcywi")
 shape = SubResource("CapsuleShape2D_lipey")
 disabled = true
 
+[node name="Hurtbox" parent="." instance=ExtResource("5_njj3f")]
+collision_mask = 4
+
+[node name="CollisionShape2D" parent="Hurtbox" index="0"]
+position = Vector2(-1, -7)
+shape = SubResource("CapsuleShape2D_8sg4p")
+
+[connection signal="area_entered" from="Hurtbox" to="." method="_on_hurtbox_area_entered"]
+
 [editable path="HitboxPivot/SwordHitbox"]
+[editable path="Hurtbox"]

@@ -1,13 +1,6 @@
 extends CharacterBody2D
 
-@export var ACCELERATION 	= 500
-@export var MAX_SPEED 		= 130
-@export var ROLL_SPEED 		= 180
-@export var FRICTION 		= 460
-@export_range(0, 10) var attack_speed_mod: float = 2
-@export_range(0, 10) var roll_speed_mod: float = 2
-
-signal _debug
+const corpse :PackedScene = preload("res://corpse.tscn")
 
 enum {
 	MOVE,
@@ -15,19 +8,38 @@ enum {
 	ATTACK
 }
 
+signal _debug
 
+var stats = PlayerStats
 var roll_vector = Vector2.DOWN
 var state = MOVE
+
+@export var ACCELERATION 	= 500
+@export var MAX_SPEED 		= 130
+@export var ROLL_SPEED 		= 180
+@export var FRICTION 		= 460
+@export var INVULN_SEC 	= 1
+
+@export_range(0, 10) var attack_speed_mod: float = 2
+@export_range(0, 10) var roll_speed_mod: float = 2
+
 
 @onready var animation_player 	= $AnimationPlayer
 @onready var animation_tree 	= $AnimationTree
 @onready var animation_state 	= animation_tree.get("parameters/playback")
 @onready var sword_hitbox	 	= $HitboxPivot/SwordHitbox
-
-
+@onready var hurtbox 			= $Hurtbox
 # VIRTUAL FUNCTIONS #
 #####################
 func _ready():
+#	Util.xplor(animation_tree)
+#	Util.xplor(animation_player)	
+	
+	stats.no_health.connect(perish)
+	
+	stats.health = stats.max_health
+	sword_hitbox.knockback_vector = roll_vector
+	
 	animation_tree.active = true
 	animation_tree.set("parameters/attack/0/TimeScale/scale", attack_speed_mod)
 	animation_tree.set("parameters/attack/1/TimeScale/scale", attack_speed_mod)
@@ -38,14 +50,11 @@ func _ready():
 	animation_tree.set("parameters/roll/2/TimeScale/scale", roll_speed_mod)
 	animation_tree.set("parameters/roll/3/TimeScale/scale", roll_speed_mod)
 #	Util.xplor(animation_tree, "scAle")
-	sword_hitbox.knockback_vector = roll_vector
+	
 	
 	
 		
 func _process(delta: float) -> void:
-	if Input.is_action_just_pressed("_debugReset"):
-		get_tree().reload_current_scene()
-	
 	_update_debug_info()
 	
 #	{"VEL X: ": "%4.0f" % velocity.x, "VEL Y: ": "%4.0f" % velocity.y}  {"SPEED": velocity.length()}
@@ -59,9 +68,15 @@ func _physics_process( delta ):
 		ATTACK:
 			attack_state( delta )
 
+
+func _on_hurtbox_area_entered(area: Area2D) -> void:
+	stats.health -= 1
+	hurtbox.start_invincibility(INVULN_SEC)
+	hurtbox.create_hit_effect()
+
+
 # MEMBER FUNCTIONS #
 ####################
-
 #var _debug_input :Vector2 = Util.random_v2_normal()
 func move_state( delta ):
 	var input_vector = Vector2.ZERO
@@ -114,15 +129,26 @@ func roll_animation_finished():
 #
 func attack_animation_finished():
 	state = MOVE
-	
+
+func perish():
+	var main = get_tree().current_scene
+	var spawned_body = corpse.instantiate()
+	spawned_body.global_position = global_position
+	spawned_body.is_facing_left = animation_tree.get("parameters/idle/blend_position").x < 0
+		
+	main.add_child(spawned_body)
+	_update_debug_info()
+	queue_free()
+		
 # UTILITY / DEBUG FUNCTIONS #
 #############################
-
 func _update_debug_info():
 	var _debug_info = {
 		"STATE": state,
 		"SPEED": velocity.length(),
-#		"TEST": Util.random_char_string(5)	
+		"HP": stats.health,
+		"INVULN": hurtbox.invincible
+#		"TEST": Util.random_char_string(5)	5
 	}
-#	print(Engine.get_frames_per_second(), " : ",  Util.random_char_string(500))
 	_debug.emit(_debug_info)
+

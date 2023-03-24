@@ -84,5 +84,6 @@ animations = [{
 [node name="EnemyDeathEffect" type="AnimatedSprite2D"]
 sprite_frames = SubResource("SpriteFrames_ow3pm")
 animation = &"Animate"
+frame_progress = 0.241778
 offset = Vector2(0, -8)
 script = ExtResource("2_dxukm")

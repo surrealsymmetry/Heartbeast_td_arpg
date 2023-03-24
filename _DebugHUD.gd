@@ -1,13 +1,17 @@
 extends Node2D
 
 var data = {}
-var text_offset : Vector2
+var _demo_mode :bool = false
+var text_offset :Vector2
+var meters :Dictionary
 
-@onready var label 	: Node = $"Control/Label 1"
-@onready var player : CharacterBody2D = get_tree().get_root().get_node("World/Player")
-@onready var meter_scene : PackedScene = load("res://UI/meter.tscn")
 
-@onready var meters : Dictionary
+@onready var label 	:Node = $"Control/Label 1"
+@onready var player :CharacterBody2D = get_tree().get_root().get_node("World/Player")
+@onready var cam 	:Camera2D = get_tree().get_root().get_node("World/Player/Cam")
+@onready var meter_scene :PackedScene = load("res://UI/meter.tscn")
+
+
 
 # VIRTUAL FUNCTIONS#
 ####################
@@ -31,15 +35,20 @@ func _ready() -> void:
 	_adjust_meters()
 
 func _process(delta: float) -> void:
+#	position = cam.get_screen_center_position()
+	if Input.is_action_just_pressed("_debugReset"):
+		get_tree().reload_current_scene()
+		
 	data.merge( {
 			"FPS" : Engine.get_frames_per_second(),
 			"TEST": Util.random_char_string(8),
 		}, true
 	)
-	
+
+	meters["hp"].input = float(data["HP"]) / float(PlayerStats.max_health)
 	meters["speed"].input = data["SPEED"]/200
 	
-	_test_label_adding( delta )
+	if _demo_mode: _test_label_adding( delta )
 	queue_redraw()
 
 # SIGNALLED
@@ -55,7 +64,12 @@ func update_label( ):
 	sorted_keys.sort()
 	
 	for key in sorted_keys:
-		label.text += "\n%s:\t%s" % [key, data[key]]
+		var result = data[key]
+
+		if key == "SPEED":
+			result = "%.1f" % result
+			
+		label.text += "\n%s:\t%s" % [key, result]
 	
 	calculate_text_bottomleft()
 	_adjust_meters()
@@ -81,3 +95,4 @@ func _adjust_meters():
 		p.y += meters[m].size.y + 5
 		meters[m].pos.x = position.x
 		
+
